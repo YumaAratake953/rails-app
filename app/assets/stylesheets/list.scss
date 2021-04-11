@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+
+* {
+  box-sizing: border-box;
+}
+.ul{
+    margin-top: 22%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    //display: grid;
+    //grid-template-columns: 200px 1fr 1fr 1fr; /* 幅3等分 */
+    //grid-template-rows: 100px 100px; /* 100pxの2行 */
+    //grid-gap: 10px; /* 隙間10px */
+    //margin-bottom: 20px;
+
+    .li {
+        font-family: Montserrat, sans-serif;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 15rem);
+        gap: 2rem;
+    }
+
+    .item {
+        border-radius: 10px;
+        position: relative;
+        height: 10rem;
+        background-color: lightGrey;
+        overflow-y: hidden;
+        box-shadow: 0.1rem 0.1rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    //商品リスト内のリンクボタンの位置やサイズを変更する
+    .bt{
+        margin-left: 40%;
+        margin-bottom: 0%;
+        transform: scale(0.8,0.8);
+    }
+    
+    h3 {
+        font-size: 14px;
+        height: 35%;
+        //margin-top: 0;
+        display: block;
+        background-color: #20B2AA;
+        padding: 0.3rem;
+        transform: translate3d(0, -100%, 0);
+        transition: transform 300ms;
+    }
+    
+    .a1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        
+        &:hover,
+        &:focus {
+        > .item__overlay {
+            transform: translate3d(0, 0, 0);
+            
+            h3 {
+            transform: translate3d(0, 0, 0);
+            }
+            
+            .item__body {
+            opacity: 1;
+            }
+        }
+        }
+    }
+    
+
+    .img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    .item__overlay {
+        //display: flex;
+        //flex-direction: column;
+        //justify-content: center;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+        //top: 0;
+        //bottom: 0; 
+        transition: transform 300ms;
+        background-color: lighten(#fff, 15%);
+        transform: translate3d(0, 100%, 0);
+    }
+
+    .item__body {
+        flex-grow: 1;
+        padding: 0.2rem;
+        opacity: 0;
+        transition: opacity 500ms 100ms;
+        
+        p {
+            line-height: 1;
+            margin: 0;
+            font-size: 12px;
+        }
+        
+    }
+}
