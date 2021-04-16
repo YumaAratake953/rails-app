@@ -7,14 +7,16 @@ class WorksController < ApplicationController
   require 'bundler/setup'
   require 'csv'
   require 'mechanize'
-    
+  
+  
   def index
+    #スクレイピングを行うプログラムを呼び出す
     #shop1_scraping
     #shop2_scraping
     #shop3_scraping
   end
 
-
+  #商品一覧を表示するメソッド
   def list
     #データベースを検索するための2次元配列
     @shop_list = [['鮮魚セット','海鮮セット','海鮮'],['鮭','さけ'],['かに','ガニ','えび','蟹','海老'],
@@ -32,14 +34,15 @@ class WorksController < ApplicationController
       @q = Shop3.ransack(name_cont: f)
       @search_list += @q.result(distinct: true)
     end
+    #取り出した値に対してページングを行うための処理を行う
     @search_lists = Kaminari.paginate_array(@search_list).page(params[:page]).per(60)
     
   end
 
+  #漁師さん直送市場からのスクレイピング
   def shop1_scraping
     #データベースをまとめて更新するため今のデータを全て消す
     Shop.destroy_all
-    #download_key = 'download_imgs/'
 
     @name1 = []
     @price1 = []
@@ -56,18 +59,22 @@ class WorksController < ApplicationController
     doc = Nokogiri::HTML.parse(html,nil,charset)
 
     #スクレイピングによって得られた各データを配列に格納する
+    #商品名
     name = doc.search("p.li_text02")
     name.each do |n|
       @name1 << n.text
     end
+    #値段
     price = doc.search("p.li_text03")
     price.each do |p|
       @price1 << p.text
     end
+    #商品サイトURL
     url = doc.search("p.li_img03").children
     url.each do |u|
       @url1 << u.get_attribute('href')
     end
+    #商品の詳細情報
     comment = doc.search("p.li_text04")
     comment.each do |c|
       @comment1 << c.text
@@ -87,25 +94,28 @@ class WorksController < ApplicationController
       shop1 = Shop.new
       shop1.name = @name1[n]
       num = @price1[n]
-      shop1.price = num.delete("^0-9").to_i if num != nil
+      shop1.price = num.delete("^0-9").to_i if num != nil   #値段の数字部分だけを抜き出す
       shop1.url = @url1[n]
       shop1.com = @comment1[n]
       
+      #商品画像を入れるファイルを作る
       filename= "foods1_#{n}.jpeg"
       shop1.img = filename
       shop1.save
       
-      #if @image1[n] != nil
-      #  File.open(filename,"wb") do |file|
-      #    open(@image1[n]) do |img|
-      #      file.write(img.read)
-      #    end
-      #  end
-      #end
+      #取得した商品画像をファイルに格納する
+      if @image1[n] != nil
+        File.open(filename,"wb") do |file|
+          open(@image1[n]) do |img|
+            file.write(img.read)
+          end
+        end
+      end
     end
 
   end
 
+  #ぎょれんからのスクレイピング
   def shop2_scraping
     Shop2.destroy_all
     
@@ -122,14 +132,32 @@ class WorksController < ApplicationController
       sleep 1
       html = URI.open(url).read
       doc = Nokogiri::HTML.parse(html,nil,charset)
-
-      url = doc.search("div.sysItemName").children
-      url.each do |n|
-        @url2 << n.get_attribute('href')
-        #name = n.text.delete("\n")
-        #@name2 << name if name.class == String
+      
+      # url = doc.search("div.sysItemName").children
+      # url.each do |n|
+      #   @url2 << n.get_attribute('href')
+      #   #name = n.text.delete("\n")
+      #   #@name2 << name if name.class == String
+      # end
+      # name = doc.search("img.thumbnail")
+      # name.each do |s|
+      #   @name2 << s.get_attribute('alt')
+      # end
+      # price = doc.search("div.sysRetailPrice")
+      # price.each do |p|
+      #   @price2 << p.text.delete("\n")
+      # end
+      # image = doc.search("img.thumbnail")
+      # image.each do |i|
+      #   @image2 << i.get_attribute('src')
+      # end
+      
+      
+      url = doc.search("div.sysThumbnailImage").children
+      url.each do |u|
+        @url2 << u.get_attribute('href') if u.get_attribute('href') != nil
       end
-      name = doc.search("img.thumbnail")
+      name = url.children
       name.each do |s|
         @name2 << s.get_attribute('alt')
       end
@@ -137,10 +165,10 @@ class WorksController < ApplicationController
       price.each do |p|
         @price2 << p.text.delete("\n")
       end
-      image = doc.search("img.thumbnail")
-      image.each do |i|
+      name.each do |i|
         @image2 << i.get_attribute('src')
       end
+
 
       range = 0..@name2.length
       range.each do |n|
@@ -175,6 +203,7 @@ class WorksController < ApplicationController
     end
   end
 
+  #山内鮮魚店からのスクレイピング
   def shop3_scraping
     Shop3.destroy_all
     @name3 = []
@@ -226,13 +255,13 @@ class WorksController < ApplicationController
         shop3.img = filename
         shop3.save
 
-        #if @image3[n] != nil
-        #  File.open(filename,"wb") do |file|
-        #    open(@image3[n]) do |img|
-        #      file.write(img.read)
-        #    end
-        #  end
-        #end
+        if @image3[n] != nil
+          File.open(filename,"wb") do |file|
+            open(@image3[n]) do |img|
+              file.write(img.read)
+            end
+          end
+        end
       end
 
       next_link = doc.at_css('.FS2_pager_link_next')

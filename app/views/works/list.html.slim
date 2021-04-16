@@ -21,9 +21,10 @@
                             .item__body
                                 p =s.com
                             .bt
-                                =link_to '商品サイトへ', s.url, class: 'btntransform'
-                
-                        = image_tag s.img, class: "img", :size => '18x12'
+                                =link_to '商品サイトへ', s.url, class: 'btntransform' 
+                        .box
+                            p.price #{s.price}円 
+                    = image_tag s.img, class: "img", :size => '18x12'
     
     .page
         = paginate @search_lists
