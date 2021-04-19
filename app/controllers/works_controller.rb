@@ -24,18 +24,29 @@ class WorksController < ApplicationController
     ['いくら','筋子','たらこ','数の子','白子'],['カツオ','かつお'],['鱈','タラ'],['秋刀魚','さんま','サンマ'],['ほや','ホヤ']]
     @search_list = []
    
-    #postされた数字に該当する2次元配列の値を取得する
-    @foods = @shop_list[params[:work].to_i] 
-    @foods.each do |f|
-      @q = Shop.ransack(name_cont: f)
-      @search_list += @q.result(distinct: true)
-      @q = Shop2.ransack(name_cont: f)
-      @search_list += @q.result(distinct: true)
-      @q = Shop3.ransack(name_cont: f)
-      @search_list += @q.result(distinct: true)
+    if params[:work] == "100" then  #"全ての商品"が選択された場合　　　
+      @search_list += Shop.all
+      @search_list += Shop2.all
+      @search_list += Shop3.all
+    else 　#特定の商品が選択された場合
+      #postされた数字に該当する2次元配列の値を取得する
+      @foods = @shop_list[params[:work].to_i] 
+      #配列内の単語が含まれた商品情報をデータベースから取得する
+      @foods.each do |f|
+        @q = Shop.ransack(name_cont: f)
+        @search_list += @q.result(distinct: true) 
+        @q = Shop2.ransack(name_cont: f)
+        @search_list += @q.result(distinct: true) 
+        @q = Shop3.ransack(name_cont: f)
+        @search_list += @q.result(distinct: true) 
+      end
     end
+    #同じ値が取得されていないか検査する
+    @search_list.uniq!(&:name)
     #取り出した値に対してページングを行うための処理を行う
     @search_lists = Kaminari.paginate_array(@search_list).page(params[:page]).per(60)
+     
+    
     
   end
 
