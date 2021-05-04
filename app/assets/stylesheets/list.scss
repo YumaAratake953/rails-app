@@ -9,6 +9,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    text-align: left;
 
     .li {   
         font-family: Montserrat, sans-serif;
@@ -16,6 +17,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, 15rem);
         gap: 2rem;
+        
     }
 
     .item {
@@ -25,14 +27,10 @@
         background-color: lightGrey;
         overflow-y: hidden;
         box-shadow: 0.1rem 0.1rem 1rem rgba(0, 0, 0, 0.1);
+        scroll-behavior: smooth;
     }
 
-    //商品リスト内のリンクボタンの位置やサイズを変更する
-    .bt{
-        margin-left: 40%;
-        margin-bottom: 0%;
-        transform: scale(0.8,0.8);
-    }
+    
     //値段を表示するCSSを設定する
     .box{
         margin-left: 60%;
@@ -41,6 +39,7 @@
         border-radius: 20px;
         background: linear-gradient(to bottom, #dddddd, #cccccc);
         .price{
+            margin-left: 20%;
             z-index: 3;
             overflow-y: hidden;
         }
@@ -82,7 +81,6 @@
         }
     }
     
-
     .img {
         width: 100%;
         height: 100%;
@@ -97,19 +95,29 @@
         transition: transform 300ms;
         background-color: lighten(#fff, 15%);
         transform: translate3d(0, 100%, 0);
+        
     }
-
     .item__body {
         flex-grow: 1;
         padding: 0.2rem;
         opacity: 0;
         transition: opacity 500ms 100ms;
-        
         p {
             line-height: 1;
             margin: 0;
             font-size: 12px;
-        }
-        
+        }  
     }
+    
+    //商品リスト内のリンクボタンの位置やサイズを変更する
+    .list_bottom{
+        display: flex;
+        .bt{
+            //padding: 0.2rem;
+            margin-left: -2%;
+            margin-bottom: 0%;
+            transform: scale(0.7,0.7);
+        }
+    }
+    
 }

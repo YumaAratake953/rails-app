@@ -8,15 +8,47 @@ class WorksController < ApplicationController
   require 'csv'
   require 'mechanize'
   
-  
   def index
+    User.destroy_all
     #スクレイピングを行うプログラムを呼び出す
     #shop1_scraping
     #shop2_scraping
     #shop3_scraping
   end
 
-  #商品一覧を表示するメソッド
+  def new 
+    @work = Work.new
+  end
+
+  #お気に入り追加ボタンを押された商品をデータベースに追加するアクション
+  def favorite_add
+    logger.debug(params[:id])
+    favorite = Favorite.new
+    favorite.user_id = 1
+    favorite.foods_id = params[:id]
+    favorite.save
+    #商品ページに戻す
+    redirect_to params[:nowUrl], notice: "商品をお気に入りに追加しました"
+  end
+
+  def favorite_list
+    @id_list = []
+    @favorite_list = []
+    @user_id = 1 #利用しているユーザのIDを格納(今は1)
+
+    #ユーザIDに該当するデータの商品IDを配列に格納
+    @id_list = Favorite.where(user_id: 1)
+
+    #各データベースからお気に入り商品IDに該当する商品情報を配列に格納する
+    @id_list.each do |f|
+      @favorite_list += Shop.where(id: f.foods_id) if Shop.find_by(id: f.foods_id) != nil
+      @favorite_list += Shop2.where(id: f.foods_id) if Shop2.find_by(id: f.foods_id) != nil
+      @favorite_list += Shop3.where(id: f.foods_id) if Shop3.find_by(id: f.foods_id) != nil
+    end
+
+  end
+
+  #商品一覧を表示するアクション
   def list
     #データベースを検索するための2次元配列
     @shop_list = [['鮮魚セット','海鮮セット','海鮮'],['鮭','さけ'],['かに','ガニ','えび','蟹','海老'],
@@ -28,7 +60,8 @@ class WorksController < ApplicationController
       @search_list += Shop.all
       @search_list += Shop2.all
       @search_list += Shop3.all
-    else 　#特定の商品が選択された場合
+    else
+      #特定の商品が選択された場合
       #postされた数字に該当する2次元配列の値を取得する
       @foods = @shop_list[params[:work].to_i] 
       #配列内の単語が含まれた商品情報をデータベースから取得する
@@ -45,12 +78,9 @@ class WorksController < ApplicationController
     @search_list.uniq!(&:name)
     #取り出した値に対してページングを行うための処理を行う
     @search_lists = Kaminari.paginate_array(@search_list).page(params[:page]).per(60)
-     
-    
-    
   end
 
-  #漁師さん直送市場からのスクレイピング
+  #漁師さん直送市場からのスクレイピングを行うアクション
   def shop1_scraping
     #データベースをまとめて更新するため今のデータを全て消す
     Shop.destroy_all
@@ -143,25 +173,6 @@ class WorksController < ApplicationController
       sleep 1
       html = URI.open(url).read
       doc = Nokogiri::HTML.parse(html,nil,charset)
-      
-      # url = doc.search("div.sysItemName").children
-      # url.each do |n|
-      #   @url2 << n.get_attribute('href')
-      #   #name = n.text.delete("\n")
-      #   #@name2 << name if name.class == String
-      # end
-      # name = doc.search("img.thumbnail")
-      # name.each do |s|
-      #   @name2 << s.get_attribute('alt')
-      # end
-      # price = doc.search("div.sysRetailPrice")
-      # price.each do |p|
-      #   @price2 << p.text.delete("\n")
-      # end
-      # image = doc.search("img.thumbnail")
-      # image.each do |i|
-      #   @image2 << i.get_attribute('src')
-      # end
       
       
       url = doc.search("div.sysThumbnailImage").children

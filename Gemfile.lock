@@ -66,6 +66,7 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     autoprefixer-rails (10.2.4.0)
       execjs
+    bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.7.2)
       msgpack (~> 1.0)
@@ -267,6 +268,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   bootstrap
   byebug

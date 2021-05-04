@@ -1,0 +1,29 @@
+= render partial: 'layouts/back'
+
+.top
+    h2.s1 お気に入り商品一覧
+
+    header.sticky-top
+        div
+            = link_to works_path, class: 'btntextchange'
+                span ホーム
+                span HOME
+    
+    .ul
+        - @favorite_list.each do |s|
+            .li
+                .item
+                    .a1
+                        a aria-labelledby= s.name 
+                        .item__overlay
+                            h3#person aria-hidden="true"  #{s.name}
+                            .item__body
+                                p =s.com
+                            .list_bottom
+                                .bt =link_to '商品サイトへ', s.url, class: 'btntransform1' 
+                        .box
+                            p.price #{s.price}円 
+                    = image_tag s.img, class: "img", :size => '18x12'
+    
+    /.page
+        = paginate @search_lists
