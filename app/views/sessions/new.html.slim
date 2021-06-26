@@ -1,9 +1,13 @@
+/SCSSファイルの個別読み込み（順番に注意！）
+- content_for :css do
+    = stylesheet_link_tag 'not'
+
 h1 ログイン
 
 = form_with scope: :session, local: true do |f|
     .form-group
         = f.label :email, 'メールアドレス'
-        = f.text_field :email, class: 'form-control', id: 'session_email'
+        = f.text_field :email, class: 'form-control', id: "exampleFormControlInput1"
     .form-group
         = f.label :password, 'パスワード'
         = f.password_field :password, class: 'form-control', id: 'session_password'
@@ -11,5 +15,3 @@ h1 ログイン
 
 = link_to admin_users_path, class: 'btn btn-primary'
     p 新規登録
-    
-    

@@ -1,3 +1,11 @@
+/SCSSファイルの個別読み込み（順番に注意！）
+- content_for :css do
+    = stylesheet_link_tag 'button'
+    = stylesheet_link_tag 'slick'
+    = stylesheet_link_tag 'slider'
+    = stylesheet_link_tag 'reset'
+    
+
 .wrapper
     h1 Always Fresh
     ul.slider

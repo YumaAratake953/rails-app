@@ -5,8 +5,9 @@ html
       | Always Fresh
     = csrf_meta_tags
     = csp_meta_tag
-    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = yield :css
     meta content="width=device-width,initial-scale=1.0" name="viewport" 
     script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js"
     script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/ScrollTrigger.min.js"

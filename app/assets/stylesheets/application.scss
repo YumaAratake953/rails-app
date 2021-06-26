@@ -1,22 +1,17 @@
-
 /*
+*= require reset
 *= require_self 
-*= require_tree
 */
-.s1{
-    margin: 2%;
-}
-.home{
-    text-align: right;
-    //margin-right: 2%;
+@import "bootstrap";
 
-}
 .footer{
     text-align: right;
     margin-right: 1%;
 }
 
+
+
     
   
-@import "bootstrap"
+
 

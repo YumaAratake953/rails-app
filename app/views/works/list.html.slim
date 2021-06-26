@@ -1,5 +1,13 @@
- 
 = render partial: 'layouts/back'
+
+/SCSSファイルの個別読み込み（順番に注意！）
+- content_for :css do
+    = stylesheet_link_tag 'reset'
+    = stylesheet_link_tag 'button2'
+    = stylesheet_link_tag 'button'
+    = stylesheet_link_tag 'list'
+    = stylesheet_link_tag 'works'
+
 
 .top
     h2.s1 商品一覧
